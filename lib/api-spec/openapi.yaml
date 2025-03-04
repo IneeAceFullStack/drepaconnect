@@ -1,0 +1,1604 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: DrépaConnect API — plateforme de lutte contre la drépanocytose
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication & user management
+  - name: patients
+    description: Patient profiles
+  - name: crises
+    description: Crisis journal entries
+  - name: medications
+    description: Medication management
+  - name: centers
+    description: Screening centers
+  - name: genetic
+    description: Genetic risk calculator
+  - name: medical-records
+    description: Digital health records
+  - name: donors
+    description: Blood donor network
+  - name: blood-requests
+    description: Blood donation requests
+  - name: pregnancy
+    description: Pregnancy tracking
+  - name: education
+    description: Educational modules
+  - name: stats
+    description: National statistics
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # AUTH
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
+  # PATIENTS
+  /patients:
+    get:
+      operationId: listPatients
+      tags: [patients]
+      summary: List patients (doctor view)
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sickleType
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Patient"
+    post:
+      operationId: createPatient
+      tags: [patients]
+      summary: Create patient profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientInput"
+      responses:
+        "201":
+          description: Patient created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+
+  /patients/{id}:
+    get:
+      operationId: getPatient
+      tags: [patients]
+      summary: Get patient by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Patient found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "404":
+          description: Not found
+    patch:
+      operationId: updatePatient
+      tags: [patients]
+      summary: Update patient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+
+  # CRISES
+  /crises:
+    get:
+      operationId: listCrises
+      tags: [crises]
+      summary: List crisis entries for current patient
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Crisis list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Crisis"
+    post:
+      operationId: createCrisis
+      tags: [crises]
+      summary: Log a crisis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrisisInput"
+      responses:
+        "201":
+          description: Crisis logged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Crisis"
+
+  /crises/{id}:
+    get:
+      operationId: getCrisis
+      tags: [crises]
+      summary: Get crisis entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Crisis entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Crisis"
+    patch:
+      operationId: updateCrisis
+      tags: [crises]
+      summary: Update crisis entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrisisUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Crisis"
+    delete:
+      operationId: deleteCrisis
+      tags: [crises]
+      summary: Delete crisis entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /crises/stats/summary:
+    get:
+      operationId: getCrisisStats
+      tags: [crises]
+      summary: Crisis statistics summary
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Crisis statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrisisStats"
+
+  # MEDICATIONS
+  /medications:
+    get:
+      operationId: listMedications
+      tags: [medications]
+      summary: List medications for a patient
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Medication list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medication"
+    post:
+      operationId: createMedication
+      tags: [medications]
+      summary: Add medication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicationInput"
+      responses:
+        "201":
+          description: Medication added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medication"
+
+  /medications/{id}:
+    patch:
+      operationId: updateMedication
+      tags: [medications]
+      summary: Update medication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medication"
+    delete:
+      operationId: deleteMedication
+      tags: [medications]
+      summary: Delete medication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /medications/{id}/take:
+    post:
+      operationId: takeMedication
+      tags: [medications]
+      summary: Mark medication as taken
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Marked as taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medication"
+
+  # SCREENING CENTERS
+  /centers:
+    get:
+      operationId: listCenters
+      tags: [centers]
+      summary: List screening centers
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: province
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Centers list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScreeningCenter"
+    post:
+      operationId: createCenter
+      tags: [centers]
+      summary: Create screening center (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScreeningCenterInput"
+      responses:
+        "201":
+          description: Center created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScreeningCenter"
+
+  /centers/{id}:
+    get:
+      operationId: getCenter
+      tags: [centers]
+      summary: Get screening center
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Center details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScreeningCenter"
+
+  # GENETIC CALCULATOR
+  /genetic/calculate:
+    post:
+      operationId: calculateGeneticRisk
+      tags: [genetic]
+      summary: Calculate genetic risk (anonymous)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneticInput"
+      responses:
+        "200":
+          description: Genetic risk result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneticResult"
+
+  /genetic/history:
+    get:
+      operationId: listGeneticHistory
+      tags: [genetic]
+      summary: Get calculation history (authenticated)
+      responses:
+        "200":
+          description: Calculation history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GeneticCalculation"
+
+  # MEDICAL RECORDS
+  /medical-records:
+    get:
+      operationId: listMedicalRecords
+      tags: [medical-records]
+      summary: List medical records
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Records list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MedicalRecord"
+    post:
+      operationId: createMedicalRecord
+      tags: [medical-records]
+      summary: Create medical record entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalRecordInput"
+      responses:
+        "201":
+          description: Record created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MedicalRecord"
+
+  /medical-records/{id}:
+    get:
+      operationId: getMedicalRecord
+      tags: [medical-records]
+      summary: Get medical record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Medical record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MedicalRecord"
+
+  # BLOOD DONORS
+  /donors:
+    get:
+      operationId: listDonors
+      tags: [donors]
+      summary: List available blood donors
+      parameters:
+        - name: bloodType
+          in: query
+          schema:
+            type: string
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: available
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Donors list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BloodDonor"
+    post:
+      operationId: registerDonor
+      tags: [donors]
+      summary: Register as blood donor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BloodDonorInput"
+      responses:
+        "201":
+          description: Donor registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodDonor"
+
+  /donors/{id}/availability:
+    patch:
+      operationId: updateDonorAvailability
+      tags: [donors]
+      summary: Toggle donor availability
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DonorAvailabilityUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodDonor"
+
+  # BLOOD REQUESTS
+  /blood-requests:
+    get:
+      operationId: listBloodRequests
+      tags: [blood-requests]
+      summary: List active blood requests
+      parameters:
+        - name: bloodType
+          in: query
+          schema:
+            type: string
+        - name: urgent
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Requests list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BloodRequest"
+    post:
+      operationId: createBloodRequest
+      tags: [blood-requests]
+      summary: Create blood donation request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BloodRequestInput"
+      responses:
+        "201":
+          description: Request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodRequest"
+
+  /blood-requests/{id}/respond:
+    post:
+      operationId: respondToBloodRequest
+      tags: [blood-requests]
+      summary: Donor responds to blood request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BloodResponseInput"
+      responses:
+        "200":
+          description: Response recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodRequest"
+
+  # PREGNANCY
+  /pregnancies:
+    get:
+      operationId: listPregnancies
+      tags: [pregnancy]
+      summary: List pregnancy records
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Pregnancy records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pregnancy"
+    post:
+      operationId: createPregnancy
+      tags: [pregnancy]
+      summary: Start pregnancy tracking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PregnancyInput"
+      responses:
+        "201":
+          description: Pregnancy created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pregnancy"
+
+  /pregnancies/{id}:
+    get:
+      operationId: getPregnancy
+      tags: [pregnancy]
+      summary: Get pregnancy details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Pregnancy details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pregnancy"
+    patch:
+      operationId: updatePregnancy
+      tags: [pregnancy]
+      summary: Update pregnancy record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PregnancyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pregnancy"
+
+  # EDUCATION
+  /education:
+    get:
+      operationId: listEducationModules
+      tags: [education]
+      summary: List educational modules
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: targetAudience
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Education modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EducationModule"
+
+  /education/{id}:
+    get:
+      operationId: getEducationModule
+      tags: [education]
+      summary: Get education module
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Module content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EducationModule"
+
+  # STATISTICS
+  /stats/national:
+    get:
+      operationId: getNationalStats
+      tags: [stats]
+      summary: Get national sickle cell statistics
+      responses:
+        "200":
+          description: National statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NationalStats"
+
+  /stats/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [stats]
+      summary: Get doctor dashboard statistics
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /stats/crises-by-month:
+    get:
+      operationId: getCrisesByMonth
+      tags: [stats]
+      summary: Get crises grouped by month
+      parameters:
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Monthly crisis data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonthlyCrisisData"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    # AUTH
+    RegisterInput:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [PATIENT, DOCTOR, DONOR, HELPER, ADMIN]
+        phone:
+          type: ["string", "null"]
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      required: [id, name, email, role, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [PATIENT, DOCTOR, DONOR, HELPER, ADMIN]
+        phone:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    # PATIENT
+    Patient:
+      type: object
+      required: [id, userId, sickleType, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: ["string", "null"]
+        dateOfBirth:
+          type: ["string", "null"]
+        sickleType:
+          type: string
+          enum: [SS, AS, SC, AA, AC, CC]
+        bloodType:
+          type: ["string", "null"]
+        weight:
+          type: ["number", "null"]
+        height:
+          type: ["number", "null"]
+        allergies:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    PatientInput:
+      type: object
+      required: [sickleType]
+      properties:
+        sickleType:
+          type: string
+          enum: [SS, AS, SC, AA, AC, CC]
+        dateOfBirth:
+          type: ["string", "null"]
+        bloodType:
+          type: ["string", "null"]
+        weight:
+          type: ["number", "null"]
+        height:
+          type: ["number", "null"]
+        allergies:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    PatientUpdate:
+      type: object
+      properties:
+        sickleType:
+          type: string
+          enum: [SS, AS, SC, AA, AC, CC]
+        dateOfBirth:
+          type: ["string", "null"]
+        bloodType:
+          type: ["string", "null"]
+        weight:
+          type: ["number", "null"]
+        height:
+          type: ["number", "null"]
+        allergies:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    # CRISIS
+    Crisis:
+      type: object
+      required: [id, patientId, intensity, startedAt, createdAt]
+      properties:
+        id:
+          type: integer
+        patientId:
+          type: integer
+        intensity:
+          type: integer
+          minimum: 1
+          maximum: 10
+        location:
+          type: ["string", "null"]
+        symptoms:
+          type: ["string", "null"]
+        triggers:
+          type: ["string", "null"]
+        treatment:
+          type: ["string", "null"]
+        hospitalVisit:
+          type: boolean
+        startedAt:
+          type: string
+        endedAt:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    CrisisInput:
+      type: object
+      required: [patientId, intensity, startedAt]
+      properties:
+        patientId:
+          type: integer
+        intensity:
+          type: integer
+          minimum: 1
+          maximum: 10
+        location:
+          type: ["string", "null"]
+        symptoms:
+          type: ["string", "null"]
+        triggers:
+          type: ["string", "null"]
+        treatment:
+          type: ["string", "null"]
+        hospitalVisit:
+          type: boolean
+        startedAt:
+          type: string
+        endedAt:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    CrisisUpdate:
+      type: object
+      properties:
+        intensity:
+          type: integer
+          minimum: 1
+          maximum: 10
+        location:
+          type: ["string", "null"]
+        symptoms:
+          type: ["string", "null"]
+        triggers:
+          type: ["string", "null"]
+        treatment:
+          type: ["string", "null"]
+        hospitalVisit:
+          type: boolean
+        endedAt:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    CrisisStats:
+      type: object
+      required: [total, avgIntensity, hospitalVisits, lastCrisisDate]
+      properties:
+        total:
+          type: integer
+        avgIntensity:
+          type: number
+        hospitalVisits:
+          type: integer
+        lastCrisisDate:
+          type: ["string", "null"]
+        thisMonth:
+          type: integer
+        thisYear:
+          type: integer
+
+    MonthlyCrisisData:
+      type: object
+      required: [month, count, avgIntensity]
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+        avgIntensity:
+          type: number
+
+    # MEDICATION
+    Medication:
+      type: object
+      required: [id, patientId, name, dosage, frequency, createdAt]
+      properties:
+        id:
+          type: integer
+        patientId:
+          type: integer
+        name:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        times:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        active:
+          type: boolean
+        lastTaken:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    MedicationInput:
+      type: object
+      required: [patientId, name, dosage, frequency]
+      properties:
+        patientId:
+          type: integer
+        name:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        times:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    MedicationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        times:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        active:
+          type: boolean
+        notes:
+          type: ["string", "null"]
+
+    # SCREENING CENTER
+    ScreeningCenter:
+      type: object
+      required: [id, name, city, province, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        address:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        services:
+          type: ["string", "null"]
+        openingHours:
+          type: ["string", "null"]
+        active:
+          type: boolean
+        createdAt:
+          type: string
+
+    ScreeningCenterInput:
+      type: object
+      required: [name, city, province]
+      properties:
+        name:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        address:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        services:
+          type: ["string", "null"]
+        openingHours:
+          type: ["string", "null"]
+
+    # GENETIC CALCULATOR
+    GeneticInput:
+      type: object
+      required: [parent1Type, parent2Type]
+      properties:
+        parent1Type:
+          type: string
+          enum: [AA, AS, SS, AC, SC, CC]
+        parent2Type:
+          type: string
+          enum: [AA, AS, SS, AC, SC, CC]
+        partnerName1:
+          type: ["string", "null"]
+        partnerName2:
+          type: ["string", "null"]
+
+    GeneticResult:
+      type: object
+      required: [probabilities, riskLevel, advice]
+      properties:
+        probabilities:
+          type: object
+          additionalProperties:
+            type: number
+        riskLevel:
+          type: string
+          enum: [LOW, MODERATE, HIGH, CRITICAL]
+        advice:
+          type: string
+        details:
+          type: string
+
+    GeneticCalculation:
+      type: object
+      required: [id, parent1Type, parent2Type, riskLevel, createdAt]
+      properties:
+        id:
+          type: integer
+        parent1Type:
+          type: string
+        parent2Type:
+          type: string
+        riskLevel:
+          type: string
+        probabilities:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    # MEDICAL RECORD
+    MedicalRecord:
+      type: object
+      required: [id, patientId, type, title, date, createdAt]
+      properties:
+        id:
+          type: integer
+        patientId:
+          type: integer
+        type:
+          type: string
+          enum: [CONSULTATION, LAB_RESULT, TRANSFUSION, VACCINATION, HOSPITALIZATION, OTHER]
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        date:
+          type: string
+        doctorName:
+          type: ["string", "null"]
+        facility:
+          type: ["string", "null"]
+        results:
+          type: ["string", "null"]
+        hemoglobinLevel:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+
+    MedicalRecordInput:
+      type: object
+      required: [patientId, type, title, date]
+      properties:
+        patientId:
+          type: integer
+        type:
+          type: string
+          enum: [CONSULTATION, LAB_RESULT, TRANSFUSION, VACCINATION, HOSPITALIZATION, OTHER]
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        date:
+          type: string
+        doctorName:
+          type: ["string", "null"]
+        facility:
+          type: ["string", "null"]
+        results:
+          type: ["string", "null"]
+        hemoglobinLevel:
+          type: ["number", "null"]
+
+    # BLOOD DONOR
+    BloodDonor:
+      type: object
+      required: [id, userId, bloodType, city, available, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: ["string", "null"]
+        bloodType:
+          type: string
+          enum: [A_POS, A_NEG, B_POS, B_NEG, AB_POS, AB_NEG, O_POS, O_NEG]
+        city:
+          type: string
+        province:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        available:
+          type: boolean
+        lastDonation:
+          type: ["string", "null"]
+        donationCount:
+          type: integer
+        createdAt:
+          type: string
+
+    BloodDonorInput:
+      type: object
+      required: [bloodType, city]
+      properties:
+        bloodType:
+          type: string
+          enum: [A_POS, A_NEG, B_POS, B_NEG, AB_POS, AB_NEG, O_POS, O_NEG]
+        city:
+          type: string
+        province:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+
+    DonorAvailabilityUpdate:
+      type: object
+      required: [available]
+      properties:
+        available:
+          type: boolean
+
+    # BLOOD REQUEST
+    BloodRequest:
+      type: object
+      required: [id, bloodType, city, urgent, status, createdAt]
+      properties:
+        id:
+          type: integer
+        requestedBy:
+          type: ["integer", "null"]
+        patientName:
+          type: string
+        bloodType:
+          type: string
+          enum: [A_POS, A_NEG, B_POS, B_NEG, AB_POS, AB_NEG, O_POS, O_NEG]
+        city:
+          type: string
+        hospital:
+          type: ["string", "null"]
+        urgent:
+          type: boolean
+        status:
+          type: string
+          enum: [OPEN, FULFILLED, CANCELLED]
+        message:
+          type: ["string", "null"]
+        respondedBy:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+
+    BloodRequestInput:
+      type: object
+      required: [patientName, bloodType, city]
+      properties:
+        patientName:
+          type: string
+        bloodType:
+          type: string
+          enum: [A_POS, A_NEG, B_POS, B_NEG, AB_POS, AB_NEG, O_POS, O_NEG]
+        city:
+          type: string
+        hospital:
+          type: ["string", "null"]
+        urgent:
+          type: boolean
+        message:
+          type: ["string", "null"]
+
+    BloodResponseInput:
+      type: object
+      required: [donorId]
+      properties:
+        donorId:
+          type: integer
+        message:
+          type: ["string", "null"]
+
+    # PREGNANCY
+    Pregnancy:
+      type: object
+      required: [id, patientId, startDate, createdAt]
+      properties:
+        id:
+          type: integer
+        patientId:
+          type: integer
+        startDate:
+          type: string
+        expectedDate:
+          type: ["string", "null"]
+        currentWeek:
+          type: ["integer", "null"]
+        partnerSickleType:
+          type: ["string", "null"]
+        riskLevel:
+          type: ["string", "null"]
+        doctorName:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        active:
+          type: boolean
+        createdAt:
+          type: string
+
+    PregnancyInput:
+      type: object
+      required: [patientId, startDate]
+      properties:
+        patientId:
+          type: integer
+        startDate:
+          type: string
+        expectedDate:
+          type: ["string", "null"]
+        partnerSickleType:
+          type: ["string", "null"]
+        doctorName:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    PregnancyUpdate:
+      type: object
+      properties:
+        expectedDate:
+          type: ["string", "null"]
+        currentWeek:
+          type: ["integer", "null"]
+        partnerSickleType:
+          type: ["string", "null"]
+        riskLevel:
+          type: ["string", "null"]
+        doctorName:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        active:
+          type: boolean
+
+    # EDUCATION
+    EducationModule:
+      type: object
+      required: [id, title, category, targetAudience, createdAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        category:
+          type: string
+          enum: [BASICS, GENETICS, SYMPTOMS, TREATMENT, NUTRITION, PREVENTION, SCHOOL, FAMILY]
+        targetAudience:
+          type: string
+          enum: [ALL, CHILDREN, ADULTS, STUDENTS, TEACHERS, PARENTS, DOCTORS]
+        summary:
+          type: ["string", "null"]
+        content:
+          type: ["string", "null"]
+        videoUrl:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        readTime:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+
+    # STATISTICS
+    NationalStats:
+      type: object
+      required: [totalPatients, totalDoctors, totalDonors, totalCenters, crisisThisMonth, prevalenceRate]
+      properties:
+        totalPatients:
+          type: integer
+        totalDoctors:
+          type: integer
+        totalDonors:
+          type: integer
+        totalCenters:
+          type: integer
+        crisisThisMonth:
+          type: integer
+        prevalenceRate:
+          type: number
+        byProvince:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProvinceData"
+        bySickleType:
+          type: array
+          items:
+            $ref: "#/components/schemas/SickleTypeData"
+
+    ProvinceData:
+      type: object
+      required: [province, count]
+      properties:
+        province:
+          type: string
+        count:
+          type: integer
+
+    SickleTypeData:
+      type: object
+      required: [type, count, percentage]
+      properties:
+        type:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+
+    DashboardStats:
+      type: object
+      required: [totalPatients, activeMedications, crisisThisWeek, pendingBloodRequests, availableDonors]
+      properties:
+        totalPatients:
+          type: integer
+        activeMedications:
+          type: integer
+        crisisThisWeek:
+          type: integer
+        pendingBloodRequests:
+          type: integer
+        availableDonors:
+          type: integer
+        recentCrises:
+          type: array
+          items:
+            $ref: "#/components/schemas/Crisis"
+        recentBloodRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/BloodRequest"

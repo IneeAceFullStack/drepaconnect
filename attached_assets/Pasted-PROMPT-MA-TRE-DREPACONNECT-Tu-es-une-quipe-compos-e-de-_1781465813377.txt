@@ -1,0 +1,383 @@
+PROMPT MAÎTRE — DREPACONNECT
+
+Tu es une équipe composée de :
+
+	•	Architecte logiciel senior
+	•	Développeur Full Stack TypeScript
+	•	Expert React Native Expo
+	•	Expert Next.js 14
+	•	Expert Node.js/Express
+	•	Expert PostgreSQL/Prisma
+	•	UX/UI Designer spécialisé santé
+	•	Chef de projet produit
+
+Je développe une application appelée DrepaConnect destinée à la lutte contre la drépanocytose au Congo.
+
+Objectif :
+Créer une plateforme web et mobile moderne, accessible et offline-first permettant :
+
+	1.	Calculateur de risque génétique prénuptial
+	2.	Carte interactive des centres de dépistage
+	3.	Suivi des crises drépanocytaires hors ligne
+	4.	Module éducatif scolaire
+	5.	Tableau de bord médecin
+	6.	Suivi grossesse et drépanocytose
+	7.	Carnet de santé numérique partageable
+	8.	Réseau national de donneurs de sang
+	9.	Gestion intelligente des médicaments
+	10.	Analyses statistiques nationales
+
+Stack technique :
+
+Frontend Web :
+
+	•	Next.js 14
+	•	TypeScript
+	•	TailwindCSS
+	•	Shadcn/UI
+	•	TanStack Query
+	•	Zustand
+	•	React Hook Form
+	•	Zod
+	•	Recharts
+	•	Leaflet
+
+Mobile :
+
+	•	React Native
+	•	Expo
+	•	Expo Router
+	•	NativeWind
+	•	Expo SQLite
+	•	SecureStore
+	•	Notifications
+	•	Camera
+	•	React Native Maps
+
+Backend :
+
+	•	Node.js
+	•	Express
+	•	Prisma
+	•	PostgreSQL
+	•	JWT
+	•	Socket.io
+	•	Firebase FCM
+	•	Nodemailer
+
+Architecture :
+
+	•	Monorepo pnpm
+	•	apps/web
+	•	apps/mobile
+	•	apps/api
+	•	packages/ui
+	•	packages/types
+	•	packages/utils
+	•	packages/config
+
+Je souhaite que tu travailles comme un CTO senior.
+
+Pour chaque demande :
+
+	1.	Analyse les besoins.
+	2.	Décris l’architecture.
+	3.	Propose la structure des dossiers.
+	4.	Crée les modèles Prisma.
+	5.	Crée les routes API.
+	6.	Crée les composants React.
+	7.	Génère le code complet TypeScript.
+	8.	Explique où placer chaque fichier.
+	9.	Respecte les bonnes pratiques de sécurité médicale.
+	10.	Utilise une architecture évolutive prête pour des milliers d’utilisateurs.
+
+Produis du code professionnel prêt pour la production:
+
+1- Un calculateur de risque génétique prénuptial 
+2-Carte interactive des centres de dépistage 
+3- Suivi de crise hors- ligne (offline-first)
+4-Module éducatif pour les écoles 
+5- Tableau de bord pour les médecins (version avancée)
+6-Module grossesse et Drepanocytose 
+7-Carnet de santé numérique partageable 
+8-Reseau national de donneurs de sang
+9-Gestion intelligente des médicaments 
+10- Analyse statistique avancée 
+
+📐 Architecture Monorepo
+
+drepaApp/
+├── apps/
+│   ├── web/          → Next.js 14 (portail web)
+│   ├── mobile/       → React Native + Expo (iOS & Android)
+│   └── api/          → Node.js + Express (backend)
+├── packages/
+│   ├── ui/           → Composants partagés web/mobile
+│   ├── types/        → Types TypeScript partagés
+│   ├── utils/        → Fonctions partagées
+│   └── config/       → Config ESLint, Tailwind, TypeScript
+└── package.json      → pnpm workspaces
+
+🖥️ Frontend Web — Next.js 14
+
+|Technologie              |Usage               |Justification                                 |
+|-------------------------|--------------------|----------------------------------------------|
+|**Next.js 14** App Router|Framework web       |SEO pour les pages publiques, rendu serveur   |
+|**TypeScript**           |Langage             |Sécurité du code, indispensable en solo       |
+|**TailwindCSS**          |Style               |Rapide, cohérent                              |
+|**Shadcn/ui**            |Composants UI       |Prêts à l’emploi, accessibles                 |
+|**Zustand**              |État global         |Léger, tu maîtrises déjà                      |
+|**TanStack Query**       |Appels API + cache  |Tu maîtrises déjà                             |
+|**React Hook Form + Zod**|Formulaires         |Validation robuste (données médicales)        |
+|**Recharts**             |Graphiques          |Analyses statistiques, tableau de bord médecin|
+|**Leaflet.js**           |Cartes interactives |Carte dépistage + localisation donneurs       |
+|**i18next**              |Internationalisation|Français + Lingala + Kituba plus tard         |
+
+📱 Mobile — React Native + Expo
+
+|Technologie                  |Usage             |Justification                                |
+|-----------------------------|------------------|---------------------------------------------|
+|**Expo SDK 52**              |Framework mobile  |iOS + Android depuis une base unique         |
+|**Expo Router**              |Navigation        |Basé sur fichiers, cohérent avec Next.js     |
+|**NativeWind**               |Style             |TailwindCSS pour mobile                      |
+|**TanStack Query**           |Appels API        |Même lib que le web                          |
+|**Expo SQLite**              |Stockage local    |Mode **offline-first** (point 3)             |
+|**Expo Notifications**       |Push notifications|Alertes donneurs de sang, rappels médicaments|
+|**Expo SecureStore**         |Stockage sécurisé |Données médicales sensibles                  |
+|**Expo Location**            |Géolocalisation   |Localisation des donneurs de sang            |
+|**Expo Camera**              |Scan QR code      |Lecture du carnet de santé partageable       |
+|**React Native Maps**        |Cartes mobile     |Carte des centres + donneurs                 |
+|**expo-print + expo-sharing**|Export PDF        |Carnet de santé numérique partageable        |
+
+⚙️ Backend — Node.js + Express
+
+|Technologie            |Usage                |Justification                          |
+|-----------------------|---------------------|---------------------------------------|
+|**Node.js + Express**  |Serveur API REST     |Tu maîtrises déjà                      |
+|**TypeScript**         |Langage              |Cohérence avec le reste                |
+|**Prisma ORM**         |Base de données      |Tu maîtrises déjà                      |
+|**PostgreSQL**         |Base de données      |Robuste, parfait pour données médicales|
+|**Zod**                |Validation données   |Critique pour données de santé         |
+|**JWT + Refresh Token**|Authentification     |Contrôle total, sécurisé               |
+|**bcrypt**             |Hashage mots de passe|Sécurité des comptes                   |
+|**Multer**             |Upload fichiers      |Documents médicaux, photos profil      |
+|**node-cron**          |Tâches planifiées    |Rappels médicaments, alertes donneurs  |
+|**Nodemailer**         |Emails               |Notifications, alertes urgences sang   |
+|**Socket.io**          |Temps réel           |Alertes urgentes donneurs de sang      |
+|**Firebase Admin SDK** |Push mobile          |Notifications iOS + Android            |
+
+🗄️ Base de données — Schéma par fonctionnalité
+
+// Les grandes entités de ton projet
+
+User          → Tous les profils (patient, médecin, donneur, aidant)
+Patient       → Profil drépanocytaire (type SS/AS/SC, médicaments...)
+MedicalRecord → Carnet de santé numérique (point 7)
+Crisis        → Journal des crises offline (point 3)
+Medication    → Gestion médicaments + prises (point 9)
+Appointment   → Transfusions, analyses, consultations
+Pregnancy     → Module grossesse (point 6)
+BloodDonor    → Réseau donneurs (point 8)
+BloodRequest  → Alertes besoin de sang urgent
+Doctor        → Tableau de bord médecin (point 5)
+ScreeningCenter → Carte des centres (point 2)
+GeneticCalc   → Historique calculs prénuptiaux (point 1)
+Statistics    → Analyses statistiques (point 10)
+SchoolPass    → Passeport scolaire (point 4)
+
+
+🔐 Authentification & Rôles
+
+Rôles dans l'application :
+
+PATIENT       → Accès espace personnel, carnet, crises, médicaments
+AIDANT        → Accès au profil d'un patient lié
+MÉDECIN       → Tableau de bord, dossiers patients partagés
+DONNEUR       → Profil donneur, alertes groupe sanguin
+ADMIN         → Gestion globale, statistiques nationales
+ANONYME       → Calculateur génétique, carte dépistage, éducation
+
+📡 Services Externes
+
+|Service                    |Usage                                      |Coût              |
+|---------------------------|-------------------------------------------|------------------|
+|**Supabase**               |PostgreSQL + Auth + Storage                |Gratuit → 25$/mois|
+|**Firebase FCM**           |Notifications push iOS/Android             |Gratuit           |
+|**OpenWeatherMap API**     |Météo pour alertes prévention              |Gratuit           |
+|**OpenStreetMap + Leaflet**|Cartes (alternative gratuite à Google Maps)|Gratuit           |
+|**OpenAI GPT-4o**          |Assistant IA Drépaconseil                  |Pay-as-you-go     |
+|**Nodemailer + Gmail SMTP**|Emails transactionnels                     |Gratuit           |
+|**Vercel**                 |Hébergement Next.js                        |Gratuit           |
+|**Railway**                |Hébergement API Node.js                    |5$/mois           |
+|**Expo EAS**               |Build + publication mobile                 |Gratuit → 29$/mois|
+
+🔄 Fonctionnement Offline-First (Point 3)
+
+📱 Mobile (Expo SQLite)
+       │
+       │ Données sauvegardées localement
+       │ même sans connexion
+       ▼
+🔁 Sync automatique
+       │
+       │ Dès que le réseau revient
+       ▼
+☁️ API Node.js → PostgreSQL
+
+Les crises, prises de médicaments et données médicales sont toujours accessibles, même sans internet.
+
+🚨 Réseau Donneurs de Sang — Architecture Temps Réel (Point 8)
+
+Patient déclare besoin urgent (groupe sanguin O+)
+              │
+              ▼
+     API → Socket.io
+              │
+              ▼
+Notification push envoyée à tous les
+donneurs O+ dans un rayon de 10 km
+              │
+              ▼
+Le donneur accepte → Patient notifié
+avec nom, contact et localisation
+
+📊 Analyses Statistiques (Point 10)
+Pour le tableau de bord médecin et l’analyse nationale :
+
+|Outil                     |Usage                                                        |
+|--------------------------|-------------------------------------------------------------|
+|**Recharts**              |Graphiques frontend (évolution hémoglobine, fréquence crises)|
+|**PostgreSQL agrégations**|Requêtes statistiques côté base de données                   |
+|**Prisma raw queries**    |Statistiques complexes (prévalence par région, âge, type)    |
+
+🚀 Plan de Développement — 4 Phases
+
+PHASE 1 — Fondations (2 mois)
+✅ Monorepo pnpm + TypeScript
+✅ Auth + rôles (Patient, Médecin, Donneur, Aidant)
+✅ Calculateur génétique (point 1)
+✅ Carte centres de dépistage (point 2)
+✅ Module éducatif écoles (point 4)
+
+PHASE 2 — Suivi Patient (2 mois)
+✅ Carnet de santé numérique + export PDF (point 7)
+✅ Journal crises offline-first (point 3)
+✅ Gestion médicaments intelligente (point 9)
+✅ Module grossesse (point 6)
+
+PHASE 3 — Médecins & Données (2 mois)
+✅ Tableau de bord médecin (point 5)
+✅ Analyses statistiques avancées (point 10)
+✅ Partage dossier patient → médecin
+
+PHASE 4 — Réseau & Urgences (1-2 mois)
+✅ Réseau donneurs de sang temps réel (point 8)
+✅ Alertes push urgentes
+✅ Géolocalisation donneurs
+
+🎨 Résumé des choix design
+
+Palette — Pourpre Doux
+
+	•	Pourpre/Plum profond comme couleur principale — chaleureux, noble, jamais froid
+	•	Rose chaud pour les urgences et la vie (sang, alertes)
+	•	Teal apaisant pour les confirmations et la santé
+	•	Neutres chauds (jamais gris pur) pour les textes
+
+Typographie — 3 polices complémentaires
+
+	•	DM Serif Display — grands titres, chiffres clés, nom de l’app. Élégante et distinctive
+	•	Playfair Display — titres de sections et cartes. Chaleureuse et littéraire
+	•	DM Sans — tout le texte courant. Légère, moderne, très lisible
+
+Effets & Animations
+
+	•	Orbes flottantes animées en fond
+	•	Scroll reveal progressif sur chaque section
+	•	Hover avec élévation et bordure gradient sur les cartes
+	•	Dégradés de fond en mesh gradient
+	•	Boutons avec animation rebond au clic
+NB: le nom de l’app c’est DrépaConnect
+
+🧱 Stack du dashboard HTML actuel:
+
+|Couche           |Technologie     |Détail                                               |
+|-----------------|----------------|-----------------------------------------------------|
+|**Structure**    |HTML5 sémantique|`aside`, `header`, `nav`, `section`                  |
+|**Style**        |CSS3 pur        |Variables CSS (`--tokens`), Grid, Flexbox, animations|
+|**Typographie**  |Google Fonts    |`Outfit` + `DM Serif Display` + `DM Sans`            |
+|**Icônes**       |SVG inline      |Logo + illustrations dessinés à la main              |
+|**Animations**   |CSS Keyframes   |`fadeUp`, `blink`, `pulseAlert`, `floatIcon`         |
+|**Interactivité**|Aucun JS        |Tout est CSS uniquement                              |
+
+
+Ce dashboard HTML est un prototype statique. Dans DrepaConnect, il sera converti comme suit :
+
+dashboard.html (prototype)
+        ↓
+apps/web/app/dashboard/page.tsx      → Next.js (web)
+apps/mobile/app/(tabs)/index.tsx     → Expo Router (mobile)
+packages/ui/components/              → Composants partagés
+
+|HTML actuel              |Version finale                       |
+|-------------------------|-------------------------------------|
+|`CSS variables`          |`tailwind.config.ts` avec tes tokens |
+|`<aside class="sidebar">`|`<Sidebar />` composant React        |
+|`<div class="stat-card">`|`<StatCard />` composant réutilisable|
+|`<div class="med-item">` |`<MedicamentItem />` avec état React |
+|`Google Fonts link`      |`next/font` optimisé                 |
+|Données en dur           |Appels API via TanStack Query        |
+|Checkboxes CSS           |`useState` + appel PATCH API         |
+
+Voici la stack complète du logo DrepaConnect :
+
+|Élément                     |Couleur                                              |
+|----------------------------|-----------------------------------------------------|
+|Fond                        |Dégradé radial `#3D1060` (centre) → `#1E0535` (bords)|
+|Goutte — haut               |`#7B5CC4`                                            |
+|Goutte — bas                |`#C26DD0` / `#D47FA0`                                |
+|Lueur (glow) derrière goutte|`#6B3FBF` ~40% opacité                               |
+|Nœud teal                   |`#4DD9C0`                                            |
+|Nœud rose                   |`#E06080`                                            |
+|Nœud blanc                  |`#FFFFFF`                                            |
+|Lignes géométriques         |`#FFFFFF` 10–20% opacité                             |
+|“Drepa”                     |`#FFFFFF`                                            |
+|“Connect”                   |`#E8A0B8`                                            |
+|Sous-titre                  |`#9B80B0` ~60% opacité                               |
+
+✍️ Typographie
+
+	•	“Drepa” — Sans-serif Bold/Black, blanc pur
+	•	“Connect” — même police, Regular/Light, rose mauve
+	•	“SANTÉ · CONNEXION · CONGO” — letter-spacing très élargi (~0.3em), petite taille, majuscules
+
+🔷 Éléments graphiques
+
+Icône (goutte)
+
+	•	Forme goutte de sang avec dégradé violet → rose
+	•	Effet gloss : lumière blanche semi-transparente en haut à gauche
+	•	Ligne ECG blanche intégrée + point rouge/rose central lumineux
+	•	Ombre/lueur diffuse autour (box-shadow / drop-shadow)
+
+Géométries
+
+	•	Hexagone externe — trait fin, blanc 10% opacité
+	•	Hexagone interne — idem, légèrement tourné
+	•	Cercle pointillé — tirets espacés, blanc 20% opacité, encercle la goutte
+	•	3 lignes fines reliant les nœuds à la goutte
+
+Nœuds
+
+	•	Teal (haut centre), rose (droite), blanc (gauche)
+	•	Petits cercles avec légère lueur colorée
+
+📐 Format / Mise en page
+
+	•	Carte carrée, coins arrondis (border-radius ~16–20px)
+	•	Composition verticale centrée : icône → nom → sous-titre
+	•	Ombre portée douce sur fond blanc externe
+	•	Vignette sombre sur les bords du fond (profondeur 3D)
+
+
+Génère le zip complet du projet (avec l’architecture complète et très bien structurée, tous les fichiers dans l’ordre, chaque fichier doit être complet et directement exécutable, ne jamais utiliser de pseudo code).
